@@ -25,12 +25,63 @@ body {
     color: #eaff01;
   }
 
-  textarea {
+  #nameInput {
     width: 100%;
-    height: 100px;
+    height: 250px; 
+    resize: vertical; 
+    padding: 10px;
+    font-family: Poppins, sans-serif;
+    font-size: 16px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    background-color: #bca9ff;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+  
+  #nameInput:focus {
+    outline: none;
+    border-color: #4d1489;
+    box-shadow: 0 2px 4px rgba(77, 20, 137, 0.3);
   }
 
+  input[type="number"] {
+    width: 50%;
+    padding: 10px;
+    font-family: Arial, sans-serif;
+    font-size: 16px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    background-color: #bca9ff;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+  
+  input[type="number"]:focus {
+    outline: none;
+    border-color: #4d1489;
+    box-shadow: 0 2px 4px rgba(77, 20, 137, 0.3);
+  }
+
+  #groupDescriptionInput {
+    margin-top: 10px;
+    width: 50%;
+    padding: 10px;
+    font-family: Poppins, sans-serif;
+    font-size: 16px;
+    border-color: #4d1489;
+    border-radius: 5px;
+    background-color: #bca9ff;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+
+  #groupDescriptionInput:focus{
+    outline: none;
+    border-color: #4d1489;
+    box-shadow: 0 2px 4px rgba(77, 20, 137, 0.3);
+
+  }
+  
   .card {
+    text-align: center;
     border: 1px solid #ccc;
     border-radius: 5px;
     padding: 10px;
