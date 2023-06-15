@@ -8,15 +8,20 @@
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@500&display=swap" rel="stylesheet">
   <link
     rel="stylesheet"
-    href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
+    href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
 </head>
 <body>
   <div class="container">
     <h1 class="animate__fadeInDown">Name Grouping Tool</h1>
     <p>Enter a list of names (format: FirstName MiddleName1 MiddleName2 LastName IndexNumber), separated by commas:</p>
-    <textarea id="nameInput"></textarea>
+    <textarea id="nameInput" 
+    placeholder="Example: John Sam Smith 01211111D,  Landon Rollins Carter 012367766D,
+      OR
+      John Sam Smith 01211111D,
+      Landon Rollins Carter 012367766D,
+    "></textarea>
     <p>Enter the desired number of people per group:</p>
-    <input type="number" id="groupSizeInput">
+    <input type="number" id="groupSizeInput" required>
     <p>Enter a group description:</p>
     <textarea id="groupDescriptionInput" placeholder="Example: JAVA GROUP"></textarea>
     <br><br>
@@ -24,6 +29,11 @@
     <hr>
     <div id="output"></div>
     <button onclick="printGroups()">Print Groups</button>
+
+    <p>Search for a name:</p>
+    <input type="text" id="searchInput">
+    <button onclick="searchName()">Search</button>
+    <p id="searchResult"></p>
   </div>
   <script src="index.js"></script>
 

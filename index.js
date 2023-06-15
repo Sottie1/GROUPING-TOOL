@@ -1,12 +1,22 @@
 function groupNames() {
   var namesInput = document.getElementById("nameInput").value;
+  var groupSizeInput = document.getElementById("groupSizeInput").value;
+  var groupSize = parseInt(groupSizeInput);
+
+  if (!groupSize || groupSize <= 0) {
+    groupSize = prompt("Please enter the desired number of people per group:");
+    if (!groupSize || groupSize <= 0) {
+      alert("Invalid group size. Please enter a positive number.");
+      return;
+    }
+  }
+
   var names = namesInput.split(",");
-  var groupSize = parseInt(document.getElementById("groupSizeInput").value);
-  var groupDescription = document.getElementById("groupDescriptionInput").value;
 
   var groups = groupNamesHelper(names, groupSize);
-  displayGroups(groups, groupDescription);
+  displayGroups(groups);
 }
+
 
   function groupNamesHelper(names, groupSize) {
     shuffle(names);  // Randomize the order of names
@@ -72,6 +82,31 @@ function groupNames() {
     outputDiv.appendChild(groupDiv);
   }
 }
+
+function searchName() {
+  var searchInput = document.getElementById("searchInput").value.toLowerCase();
+  var namesInput = document.getElementById("nameInput");
+  var names = namesInput.value.toLowerCase().split(",");
+  
+  var found = false;
+  var start = 0;
+  var end = 0;
+  
+  for (var i = 0; i < names.length; i++) {
+    if (names[i].trim().includes(searchInput)) {
+      found = true;
+      end = start + names[i].length;
+      break;
+    }
+    start += names[i].length + 1;
+  }
+  
+  if (found) {
+    namesInput.focus();
+    namesInput.setSelectionRange(start, end);
+  }
+}
+
 
 
 function printGroups() {

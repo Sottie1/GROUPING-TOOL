@@ -79,6 +79,24 @@ body {
     box-shadow: 0 2px 4px rgba(77, 20, 137, 0.3);
 
   }
+
+  #searchInput{
+    margin-top: 10px;
+    width: 50%;
+    padding: 10px;
+    font-family: Poppins, sans-serif;
+    font-size: 16px;
+    border-color: #4d1489;
+    border-radius: 5px;
+    background-color: #bca9ff;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+
+  #searchInput:focus{
+    outline: none;
+    border-color: #4d1489;
+    box-shadow: 0 2px 4px rgba(77, 20, 137, 0.3);
+  }
   
   .card {
     text-align: center;
