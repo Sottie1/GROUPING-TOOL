@@ -1,122 +1,215 @@
 function groupNames() {
-  var namesInput = document.getElementById("nameInput").value;
-  var groupSizeInput = document.getElementById("groupSizeInput").value;
-  var groupSize = parseInt(groupSizeInput);
+  const namesInput = document.getElementById("nameInput").value;
+  const groupSizeInput = document.getElementById("groupSizeInput").value;
+  const groupDescription = document.getElementById("groupDescriptionInput").value.trim();
+  let groupSize = parseInt(groupSizeInput);
 
   if (!groupSize || groupSize <= 0) {
-    groupSize = prompt("Please enter the desired number of people per group:");
-    if (!groupSize || groupSize <= 0) {
-      alert("Invalid group size. Please enter a positive number.");
-      return;
-    }
+    showModal("Please enter a valid number for group size.");
+    return;
   }
 
-  var names = namesInput.split(",");
+  const names = namesInput
+    .split("\n")
+    .map(name => name.trim())
+    .filter(Boolean);
 
-  var groups = groupNamesHelper(names, groupSize);
-  displayGroups(groups);
+  if (names.length === 0) {
+    showModal("Please provide a list of names.");
+    return;
+  }
+
+  if (!groupDescription) {
+    showModal("Please enter a description for the groups.");
+    return;
+  }
+
+  const groups = createGroups(names, groupSize);
+  displayGroups(groups, groupDescription);
 }
 
 
-  function groupNamesHelper(names, groupSize) {
-    shuffle(names);  // Randomize the order of names
 
-    var numGroups = Math.ceil(names.length / groupSize); // Calculate the number of groups
-    var groups = [];
-    var startIdx = 0;
+function createGroups(names, groupSize) {
+  shuffleArray(names);
 
-    for (var i = 0; i < numGroups; i++) {
-      var endIdx = startIdx + groupSize;
-      groups.push(names.slice(startIdx, endIdx));
-      startIdx = endIdx;
+  const groups = [];
+  const numGroups = Math.ceil(names.length / groupSize);
+
+  for (let i = 0; i < numGroups; i++) {
+    const startIdx = i * groupSize;
+    const group = names.slice(startIdx, startIdx + groupSize);
+
+    if (group.length > 0) { // Prevent adding empty groups
+      groups.push(group);
     }
-
-    return groups;
   }
 
-  function shuffle(array) {
-    var currentIndex = array.length, temporaryValue, randomIndex;
+  return balanceGroups(groups);
+}
 
-    // While there remain elements to shuffle...
-    while (0 !== currentIndex) {
+function balanceGroups(groups) {
+  if (groups.length <= 1) return groups;
 
-      // Pick a remaining element...
-      randomIndex = Math.floor(Math.random() * currentIndex);
-      currentIndex -= 1;
+  const lastGroup = groups[groups.length - 1];
+  const secondLastGroup = groups[groups.length - 2];
 
-      // And swap it with the current element.
-      temporaryValue = array[currentIndex];
-      array[currentIndex] = array[randomIndex];
-      array[randomIndex] = temporaryValue;
-    }
-
-    return array;
+  if (lastGroup.length < Math.ceil(groups[0].length / 2)) {
+    secondLastGroup.push(...lastGroup);
+    groups.pop();
   }
 
-  function displayGroups(groups, groupDescription) {
-  var outputDiv = document.getElementById("output");
-  outputDiv.innerHTML = "";
+  return groups;
+}
 
-  for (var i = 0; i < groups.length; i++) {
-    var groupDiv = document.createElement("div");
+function shuffleArray(array) {
+  let currentIndex = array.length;
+
+  while (currentIndex !== 0) {
+    const randomIndex = Math.floor(Math.random() * currentIndex);
+    currentIndex--;
+
+    [array[currentIndex], array[randomIndex]] = [array[randomIndex], array[currentIndex]];
+  }
+}
+
+function displayGroups(groups, groupDescription) {
+  const outputDiv = document.getElementById("output");
+  outputDiv.innerHTML = ""; // Clear previous output
+
+  // Add a main title for all groups
+  const mainTitle = document.createElement("h2");
+  mainTitle.textContent = groupDescription; // Big title for all groups
+  mainTitle.className = "main-title"; // Optional: Add a CSS class for styling
+  outputDiv.appendChild(mainTitle);
+
+  // Display each group
+  groups.forEach((group, index) => {
+    const groupDiv = document.createElement("div");
     groupDiv.className = "card";
 
-    var groupHeading = document.createElement("h3");
-    groupHeading.textContent = "Group " + (i + 1);
+    const groupHeading = document.createElement("h3");
+    groupHeading.textContent = `Group ${index + 1}`; // Individual group titles
     groupDiv.appendChild(groupHeading);
 
-    var descriptionParagraph = document.createElement("p");
-    descriptionParagraph.textContent = groupDescription;
-    descriptionParagraph.className = "group-description"; // Apply the new CSS class
-    groupDiv.appendChild(descriptionParagraph);
-
-    var groupList = document.createElement("ul");
-
-    for (var j = 0; j < groups[i].length; j++) {
-      var nameItem = document.createElement("li");
-      nameItem.textContent = groups[i][j];
+    const groupList = document.createElement("ul");
+    group.forEach(name => {
+      const nameItem = document.createElement("li");
+      nameItem.textContent = name;
       groupList.appendChild(nameItem);
-    }
+    });
 
     groupDiv.appendChild(groupList);
     outputDiv.appendChild(groupDiv);
-  }
+  });
 }
 
 function searchName() {
-  var searchInput = document.getElementById("searchInput").value.toLowerCase();
-  var namesInput = document.getElementById("nameInput");
-  var names = namesInput.value.toLowerCase().split(",");
-  
-  var found = false;
-  var start = 0;
-  var end = 0;
-  
-  for (var i = 0; i < names.length; i++) {
-    if (names[i].trim().includes(searchInput)) {
+  const searchInput = document.getElementById("searchInput").value.trim().toLowerCase();
+  const namesInput = document.getElementById("nameInput");
+  const names = namesInput.value.split("\n").map(name => name.trim());
+
+  if (!searchInput) {
+    showModal("Please enter a name to search.");
+    return;
+  }
+
+  let found = false;
+  let start = 0;
+
+  // Loop through names to find the match and calculate position
+  for (let i = 0; i < names.length; i++) {
+    const currentName = names[i].toLowerCase();
+    if (currentName.includes(searchInput)) {
       found = true;
-      end = start + names[i].length;
+
+      // Calculate start and end indices for highlighting
+      const end = start + names[i].length;
+
+      // Set focus and highlight the matched name
+      namesInput.focus();
+      namesInput.setSelectionRange(start, end);
+
+      // Break after the first match
       break;
     }
-    start += names[i].length + 1;
+
+    // Update the starting index to the next name
+    start += names[i].length + 1; // +1 accounts for the newline character
   }
-  
-  if (found) {
-    namesInput.focus();
-    namesInput.setSelectionRange(start, end);
+
+  if (!found) {
+    showModal("Name not found in the list.");
   }
 }
 
 
-
 function printGroups() {
-  var outputDiv = document.getElementById("output");
-  var printContent = outputDiv.innerHTML;
-  var printWindow = window.open('', '_blank');
+  const outputDiv = document.getElementById("output");
+  const printContent = outputDiv.innerHTML;
+
+  // Open a new window for printing
+  const printWindow = window.open('', '_blank');
   printWindow.document.open();
-  printWindow.document.write('<html><head><title> Groups</title></head><body>');
-  printWindow.document.write(printContent);
-  printWindow.document.write('</body></html>');
+
+  // Add centered styling to the printed content
+  printWindow.document.write(`
+    <html>
+      <head>
+        <title>Groups</title>
+        <style>
+          body {
+            font-family: 'Poppins', sans-serif;
+            text-align: center;
+            margin: 0;
+            padding: 0;
+          }
+          .main-title {
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 20px;
+          }
+          .card {
+            display: inline-block;
+            text-align: left;
+            margin: 10px;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            width: 300px;
+          }
+          ul {
+            padding-left: 20px;
+          }
+        </style>
+      </head>
+      <body>
+        ${printContent}
+      </body>
+    </html>
+  `);
+
   printWindow.document.close();
   printWindow.print();
+}
+
+// Function to show modal with a message
+function showModal(message) {
+  const modal = document.getElementById("modal");
+  const modalMessage = document.getElementById("modalMessage");
+  const modalClose = document.getElementById("modalClose");
+
+  modalMessage.textContent = message;
+  modal.style.display = "block";
+
+  modalClose.onclick = function () {
+    modal.style.display = "none";
+  };
+
+  window.onclick = function (event) {
+    if (event.target === modal) {
+      modal.style.display = "none";
+    }
+  };
 }

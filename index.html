@@ -13,13 +13,16 @@
 <body>
   <div class="container">
     <h1 class="animate__fadeInDown">Name Grouping Tool</h1>
-    <p>Enter a list of names (format: FirstName MiddleName1 MiddleName2 LastName IndexNumber), separated by commas:</p>
+    <p>Enter a list of names (format: FirstName MiddleName1 MiddleName2 LastName IndexNumber)</p>
     <textarea id="nameInput" 
-    placeholder="Example: John Sam Smith 01211111D,  Landon Rollins Carter 012367766D,
-      OR
-      John Sam Smith 01211111D,
-      Landon Rollins Carter 012367766D,
-    "></textarea>
+  placeholder="Example: 
+  John Sam Smith 01211111D
+Landon Rollins Carter 012367766D
+Alice Johnson 012345678D
+Bob Carter 012876543D
+">
+</textarea>
+
     <p>Enter the desired number of people per group:</p>
     <input type="number" id="groupSizeInput" required>
     <p>Enter a group description:</p>
@@ -34,6 +37,13 @@
     <input type="text" id="searchInput">
     <button onclick="searchName()">Search</button>
     <p id="searchResult"></p>
+  </div>
+
+  <div id="modal" class="modal">
+    <div class="modal-content">
+      <span id="modalClose" class="close">&times;</span>
+      <p id="modalMessage"></p>
+    </div>
   </div>
   <script src="index.js"></script>
 
